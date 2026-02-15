@@ -132,3 +132,15 @@ Performance degrades gradually as forecast horizon increases, which is expected 
  - src/         # Data loading, cleaning, analysis, modeling
  - outputs/     # Generated plots and prediction outputs
 
+
+## How to Run
+1. Create a virtual environment
+   - python -m venv .venv
+   - source .venv/bin/activate
+   - pip install -r requirements.txt
+
+2. Add dataset
+   - Place the raw file inside: data/MTA_Subway_Turnstile_Usage_Data_2022.csv
+
+3. Run the full pipeline
+   - python src/main.py
