@@ -128,3 +128,7 @@ Performance degrades gradually as forecast horizon increases, which is expected 
 
 ## Project Structure
 
+ - data/        # Raw dataset (not included)
+ - src/         # Data loading, cleaning, analysis, modeling
+ - outputs/     # Generated plots and prediction outputs
+
