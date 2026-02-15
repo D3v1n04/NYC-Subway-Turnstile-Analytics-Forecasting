@@ -12,7 +12,7 @@ def run(output_dir: Path) -> None:
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # ---------------------------
+# ---------------------------
     # Load daily data
     data_path = output_dir / "daily_traffic_2022.csv"
     if not data_path.exists():
@@ -25,7 +25,7 @@ def run(output_dir: Path) -> None:
     # Target
     df["Total_Traffic"] = df["Entry_Diff"] + df["Exit_Diff"]
 
-    # ---------------------------
+# ---------------------------
     # Calendar features
     df["t"] = range(len(df))
     df["Day_of_Week"] = df["Date_only"].dt.dayofweek
@@ -40,8 +40,8 @@ def run(output_dir: Path) -> None:
 
     print("Holiday days in dataset:", int(df["Is_Holiday"].sum()))
 
-    # ---------------------------
-    # Lag + rolling features (PAST only)
+# ---------------------------
+    # Lag and rolling features
     df["Lag_1"]  = df["Total_Traffic"].shift(1)
     df["Lag_7"]  = df["Total_Traffic"].shift(7)
     df["Lag_14"] = df["Total_Traffic"].shift(14)
@@ -54,8 +54,8 @@ def run(output_dir: Path) -> None:
 
     df = df.dropna().reset_index(drop=True)
 
-    # ---------------------------
-    # Features used (must match walk-forward x_row keys)
+# ---------------------------
+    # Features
     features = [
         "Is_Weekend",
         "Is_Holiday",
@@ -73,7 +73,7 @@ def run(output_dir: Path) -> None:
         "Rolling_30",
     ]
 
-    # ---------------------------
+# ---------------------------
     # Train/Test split
     train_size = int(len(df) * 0.8)
 
@@ -86,7 +86,7 @@ def run(output_dir: Path) -> None:
     y_test = test["Total_Traffic"].values
     test_walk = test.reset_index(drop=True)
 
-    # ---------------------------
+# ---------------------------
     # Model
     model = XGBRegressor(
         n_estimators=500,
@@ -99,8 +99,8 @@ def run(output_dir: Path) -> None:
     )
     model.fit(X_train, y_train)
 
-    # ---------------------------
-    # WALK-FORWARD forecasting (recursive)
+ # ---------------------------
+    # forecasting (recursive)
     walk_preds = []
     history = train_full["Total_Traffic"].tolist()
 
@@ -140,7 +140,7 @@ def run(output_dir: Path) -> None:
 
     walk_preds = np.array(walk_preds)
 
-    # ---------------------------
+# ---------------------------
     # Evaluation
     mae = mean_absolute_error(y_test, walk_preds)
     rmse = np.sqrt(mean_squared_error(y_test, walk_preds))
@@ -149,7 +149,7 @@ def run(output_dir: Path) -> None:
     print(f"MAE: {mae:,.0f}")
     print(f"RMSE: {rmse:,.0f}")
 
-    # ---------------------------
+# ---------------------------
     # Plot
     plt.figure(figsize=(12, 6))
     plt.plot(test["Date_only"], y_test, label="Actual")
@@ -166,8 +166,8 @@ def run(output_dir: Path) -> None:
 
     print(f"\nWalk-forward forecast plot saved to: {forecast_plot.resolve()}")
 
-    # --------------------------------------------------
-    # MULTI-HORIZON EVALUATION (walk-forward)
+# --------------------------------------------------
+    # Multi Horizon Evaluation
     actual = test_walk["Total_Traffic"].values
     preds = walk_preds
 
