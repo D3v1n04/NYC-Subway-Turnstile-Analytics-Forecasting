@@ -1,5 +1,3 @@
-# src/analytics.py
-
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -31,7 +29,7 @@ def run(df: pd.DataFrame, output_dir: Path) -> None:
     df["Weekday_Name"] = df["Datetime"].dt.day_name()
     df["Interval_Traffic"] = df["Entry_Diff"].fillna(0) + df["Exit_Diff"].fillna(0)
 
-    # ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
     # Daily totals
     daily_traffic = df.groupby("Date_only")[["Entry_Diff", "Exit_Diff"]].sum()
     daily_traffic["Total_Traffic"] = daily_traffic["Entry_Diff"] + daily_traffic["Exit_Diff"]
@@ -86,7 +84,7 @@ def run(df: pd.DataFrame, output_dir: Path) -> None:
         example = df[df["Unit"] == unit].iloc[0]
         print(f"Unit: {unit} | C/A: {example['C/A']} | SCP: {example['SCP']}")
 
-    # ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
     # Hourly avg traffic for Top 5 stations
     print("\nStation hourly breakdown")
 
@@ -118,7 +116,7 @@ def run(df: pd.DataFrame, output_dir: Path) -> None:
     savefig(top5_plot)
     print(f"Station-level hourly plot saved to: {top5_plot.resolve()}")
 
-    # ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
     # Monthly recovery curve
     print("\nMonthly recovery curve")
 
@@ -175,7 +173,7 @@ def run(df: pd.DataFrame, output_dir: Path) -> None:
     savefig(weekday_plot)
     print(f"Weekday vs weekend plot saved to: {weekday_plot.resolve()}")
 
-    # ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
     # Weekly seasonality curve
     print("\nWeekly seasonality curve")
 
@@ -205,7 +203,7 @@ def run(df: pd.DataFrame, output_dir: Path) -> None:
     savefig(weekly_plot)
     print(f"Weekly pattern plot saved to: {weekly_plot.resolve()}")
 
-    # ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
     # Hour x Day heatmap
     print("\nBuilding Hour x Day-of-Week heatmap")
 
