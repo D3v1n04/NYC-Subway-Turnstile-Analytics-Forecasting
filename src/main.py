@@ -16,16 +16,15 @@ def main():
 
     print("\n=== NYC Subway Turnstile Analytics Pipeline ===\n")
 
-    # 1) Load + clean interval-level data
     df = load_data(file_path)
 
-    # 2) Analytics outputs (daily csv + plots)
+    # Analytics outputs (daily csv and plots)
     analytics.run(df, outputs_dir)
 
-    # 3) Forecasting (XGB baseline)
+    # Forecasting (XGB baseline)
     forecasting_xgb.run(outputs_dir)
 
-    # 4) Direct multi-horizon models + summary table
+    # Multi horizon models and summary table
     direct_multi_horizon.run(outputs_dir)
 
     print("\nPipeline complete ✅  Check outputs/.\n")
