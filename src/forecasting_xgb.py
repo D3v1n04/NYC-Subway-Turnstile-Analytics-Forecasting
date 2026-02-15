@@ -24,11 +24,11 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     df["Month"] = df["Date_only"].dt.month
     df["Is_Weekend"] = (df["Day_of_Week"] >= 5).astype(int)
 
-    # Cyclical weekday encoding (better than raw 0..6 sometimes)
+    # Cyclical weekday
     df["Day_Sin"] = np.sin(2 * np.pi * df["Day_of_Week"] / 7.0)
     df["Day_Cos"] = np.cos(2 * np.pi * df["Day_of_Week"] / 7.0)
 
-    # Year seasonality (captures summer/winter patterns)
+    # Year seasonality
     df["Year_Sin"] = np.sin(2 * np.pi * df["t"] / 365.0)
     df["Year_Cos"] = np.cos(2 * np.pi * df["t"] / 365.0)
 
@@ -37,13 +37,13 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     us_holidays = holidays.US(years=years)
     df["Is_Holiday"] = df["Date_only"].dt.date.apply(lambda d: 1 if d in us_holidays else 0)
 
-    # Lags (past values)
+    # Lags
     df["Lag_1"] = df["Total_Traffic"].shift(1)
     df["Lag_7"] = df["Total_Traffic"].shift(7)
     df["Lag_14"] = df["Total_Traffic"].shift(14)
     df["Lag_28"] = df["Total_Traffic"].shift(28)
 
-    # Rolling (PAST-only, no leakage)
+    # Rolling
     df["Rolling_7"] = df["Total_Traffic"].shift(1).rolling(7).mean()
     df["Rolling_14"] = df["Total_Traffic"].shift(1).rolling(14).mean()
     df["Rolling_30"] = df["Total_Traffic"].shift(1).rolling(30).mean()
@@ -62,7 +62,7 @@ def run(output_dir: Path) -> None:
     df = pd.read_csv(data_path)
     df = build_features(df)
 
-    # Stronger feature set (matches what we used in the “A” model style)
+    # Features
     features = [
         "t",
         "Month",
