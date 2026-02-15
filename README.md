@@ -40,7 +40,7 @@ Each record includes:
 - Entries (cumulative)
 - Exits (cumulative)
 
-⚠️ The raw dataset is not included in this repository due to file size constraints.
+IMPORTANT NOTE: The raw dataset is not included in this repository due to file size constraints.
 
 
 ## Data Cleaning & Processing
