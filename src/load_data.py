@@ -1,5 +1,3 @@
-# src/load_data.py
-
 from pathlib import Path
 import pandas as pd
 
@@ -17,10 +15,9 @@ def load_data(path: Path) -> pd.DataFrame:
 
     df = pd.read_csv(path)
 
-    # Clean column names (remove trailing spaces)
     df.columns = df.columns.str.strip()
 
-    # Combine Date + Time into datetime
+    # Combine Date and Time into datetime
     df["Datetime"] = pd.to_datetime(
         df["Date"] + " " + df["Time"],
         format="%m/%d/%Y %H:%M:%S",
@@ -29,7 +26,7 @@ def load_data(path: Path) -> pd.DataFrame:
 
     df = df.dropna(subset=["Datetime"])
 
-    # Convert numeric safely
+    # Convert numeric
     df["Entries"] = pd.to_numeric(df["Entries"], errors="coerce")
     df["Exits"] = pd.to_numeric(df["Exits"], errors="coerce")
 
