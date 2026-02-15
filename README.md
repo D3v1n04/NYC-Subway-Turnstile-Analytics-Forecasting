@@ -1,5 +1,6 @@
-NYC Subway Turnstile Analytics & Forecasting (2022)
-Overview
+# NYC Subway Turnstile Analytics & Forecasting (2022)
+
+## Overview
 
 This project analyzes and models NYC subway turnstile data from 2022.
 
@@ -7,160 +8,123 @@ The goal was to take a large real-world dataset (~10.9 million records), properl
 
 This project combines:
 
-Data analytics
+- Data analytics
+- Time-series feature engineering
+- Machine learning using XGBoost
 
-Time-series feature engineering
 
-Machine learning using XGBoost
+## Project Objectives
 
-Project Objectives
+- Clean and process raw MTA turnstile logs
+- Perform exploratory data analysis (EDA)
+- Identify traffic patterns across:
+  - Days of week
+  - Weekdays vs weekends
+  - Hours of day
+  - Monthly totals
+  - Station-level activity
+- Build forecasting models to predict daily traffic
+- Evaluate multi-horizon forecasting performance
 
-Clean and process raw MTA turnstile logs
 
-Perform exploratory data analysis (EDA)
+## Dataset
 
-Identify traffic patterns across:
-
-Days of week
-
-Weekdays vs weekends
-
-Hours of day
-
-Monthly totals
-
-Station-level activity
-
-Build forecasting models to predict daily traffic
-
-Evaluate multi-horizon forecasting performance
-
-Dataset
-
-Source: NYC MTA Turnstile Usage Data (2022)
-Size: ~10.9 million interval-level records
+**Source:** NYC MTA Turnstile Usage Data (2022)  
+**Size:** ~10.9 million interval-level records  
 
 Each record includes:
 
-Station / Unit
-
-Date
-
-Time
-
-Entries (cumulative)
-
-Exits (cumulative)
+- Station / Unit
+- Date
+- Time
+- Entries (cumulative)
+- Exits (cumulative)
 
 ⚠️ The raw dataset is not included in this repository due to file size constraints.
 
-Data Cleaning & Processing
 
-Raw MTA turnstile data consists of cumulative counters rather than direct traffic counts. Significant preprocessing was required.
+## Data Cleaning & Processing
+
+Raw MTA turnstile data consists of cumulative counters rather than direct traffic counts.
 
 Key steps:
 
-Combined Date and Time into a proper datetime column
-
-Sorted records per turnstile before computing traffic deltas
-
-Computed interval traffic using differences (Entry_Diff, Exit_Diff)
-
-Removed negative counter resets and unrealistic spikes
-
-Aggregated interval-level data into daily totals for modeling
+- Combined `Date` and `Time` into a proper datetime column
+- Sorted records per turnstile before computing traffic deltas
+- Computed interval traffic using differences (`Entry_Diff`, `Exit_Diff`)
+- Removed negative counter resets and unrealistic spikes
+- Aggregated interval-level data into daily totals for modeling
 
 Final cleaned dataset:
 
-365 daily traffic observations (2022)
+- 365 daily traffic observations (2022)
 
-Exploratory Data Analysis (EDA)
+
+## Exploratory Data Analysis (EDA)
 
 Generated insights include:
 
-Daily total traffic trend
+- Daily total traffic trend
+- Weekday vs Weekend comparison (~66% higher weekday traffic)
+- Weekly seasonality breakdown
+- Monthly recovery curve
+- Top 10 busiest stations
+- Hour-by-day traffic heatmap
+- Station-level hourly patterns
 
-Weekday vs Weekend comparison
-→ Weekdays show ~66% higher traffic than weekends
+All visualizations and CSV outputs are saved in the `/outputs` directory.
 
-Weekly seasonality breakdown
 
-Monthly recovery curve
+## Forecasting Approach
 
-Top 10 busiest stations
+**Model:** XGBoost Regressor
 
-Hour-by-day traffic heatmap
+### Feature Engineering
 
-Station-level hourly patterns
+- Lag features (1, 7, 14, 21, 28 days)
+- Rolling averages (7, 14, 30 days)
+- Weekend indicator
+- U.S. holiday indicator
+- Cyclical encoding of day-of-week
+- Time index feature
 
-All visualizations and CSV outputs are saved in the /outputs directory.
+### Train/Test Split
 
-Forecasting Approach
+- 80% training
+- 20% testing
+- Time-based split (no shuffling)
 
-Model: XGBoost Regressor
 
-Feature Engineering
+## Forecasting Results (Test Set)
 
-Lag features (1, 7, 14, 21, 28 days)
+- MAE: ~336,000 riders
+- RMSE: ~510,000 riders
 
-Rolling averages (7, 14, 30 days)
+Average weekday traffic is ~5.3 million riders, corresponding to roughly a 6–7% prediction error.
 
-Weekend indicator
 
-U.S. holiday indicator
+## Multi-Horizon Forecasting
 
-Cyclical encoding of day-of-week
+Direct models built for:
 
-Time index feature
-
-Train/Test Split
-
-80% training
-
-20% testing
-
-Time-based split (no shuffling)
-
-Forecasting Results (Test Set)
-
-XGBoost Performance:
-
-MAE: ~336,000 riders
-
-RMSE: ~510,000 riders
-
-Given average weekday traffic is ~5.3 million riders, this corresponds to roughly:
-
-→ 6–7% prediction error
-
-This is strong performance for a model trained without external signals (weather, events, etc.).
-
-Multi-Horizon Forecasting
-
-Built direct models for:
-
-1-day ahead
-
-7-day ahead
-
-14-day ahead
-
-30-day ahead
+- 1-day ahead
+- 7-day ahead
+- 14-day ahead
+- 30-day ahead
 
 Performance degrades gradually as forecast horizon increases, which is expected behavior in real-world time-series forecasting.
 
-This confirms the model captures short-term commuter patterns effectively.
 
-Tech Stack
+## Tech Stack
 
-Python
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- XGBoost
 
-Pandas
 
-NumPy
+## Project Structure
 
-Matplotlib / Seaborn
-
-Scikit-learn
-
-XGBoost

@@ -1,0 +1,16 @@
+# Datasets and outputs
+data/
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv
+venv/
+
+# OS
+.DS_Store
